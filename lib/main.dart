@@ -36,8 +36,12 @@ void main() async {
   ));
 
   // Initialize services
-  await StorageService.init();
-  await AdService.initialize();
+  try {
+    await StorageService.init();
+    await AdService.initialize();
+  } catch (e) {
+    debugPrint('Error initializing services: $e');
+  }
 
   // PRO-TIP: Pre-fetching cameras in main() makes camera screen startup nearly instant
   try {

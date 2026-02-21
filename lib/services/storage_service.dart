@@ -8,45 +8,45 @@ class StorageService {
     _prefs ??= await SharedPreferences.getInstance();
   }
 
-  static SharedPreferences get _instance {
-    if (_prefs == null) throw Exception('StorageService not initialized');
-    return _prefs!;
-  }
+  static SharedPreferences? get _instance => _prefs;
 
   // ── Disclaimer & Privacy ────────────────────────────────────────────────────
   static bool get disclaimerAccepted =>
-      _instance.getBool(PrefKeys.disclaimerAccepted) ?? false;
+      _instance?.getBool(PrefKeys.disclaimerAccepted) ?? false;
 
   static Future<void> acceptDisclaimer() async =>
       await _instance.setBool(PrefKeys.disclaimerAccepted, true);
 
   static bool get privacyAccepted =>
-      _instance.getBool(PrefKeys.privacyAccepted) ?? false;
+      _instance?.getBool(PrefKeys.privacyAccepted) ?? false;
 
   static Future<void> acceptPrivacy() async =>
       await _instance.setBool(PrefKeys.privacyAccepted, true);
 
   // ── Settings ────────────────────────────────────────────────────────────────
   static bool get soundEnabled =>
-      _instance.getBool(PrefKeys.soundEnabled) ?? true;
+      _instance?.getBool(PrefKeys.soundEnabled) ?? true;
 
   static Future<void> setSoundEnabled(bool value) async =>
       await _instance.setBool(PrefKeys.soundEnabled, value);
 
   static String get themeMode =>
-      _instance.getString(PrefKeys.themeMode) ?? 'system';
+      _instance?.getString(PrefKeys.themeMode) ?? 'system';
 
   static Future<void> setThemeMode(String value) async =>
       await _instance.setString(PrefKeys.themeMode, value);
 
-  static String get locale => _instance.getString(PrefKeys.locale) ?? 'en';
+  static String get locale => _instance?.getString(PrefKeys.locale) ?? 'en';
 
   static Future<void> setLocale(String value) async =>
       await _instance.setString(PrefKeys.locale, value);
 
   // ── Scan Count (for engagement tracking) ────────────────────────────────────
-  static int get scanCount => _instance.getInt(PrefKeys.scanCount) ?? 0;
+  static int get scanCount => _instance?.getInt(PrefKeys.scanCount) ?? 0;
 
-  static Future<void> incrementScanCount() async =>
-      await _instance.setInt(PrefKeys.scanCount, scanCount + 1);
+  static Future<void> incrementScanCount() async {
+    final prefs = _instance;
+    if (prefs == null) return;
+    await prefs.setInt(PrefKeys.scanCount, scanCount + 1);
+  }
 }
