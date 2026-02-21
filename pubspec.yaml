@@ -1,0 +1,56 @@
+name: x_ray_karo
+description: "Xray Fun Camera – Skeleton Prank Simulator. For entertainment only."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  # Camera
+  camera: ^0.10.5+9
+
+  # Ads
+  google_mobile_ads: ^5.1.0
+
+  # Permissions
+  permission_handler: ^11.3.1
+
+  # Storage
+  shared_preferences: ^2.3.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Image processing
+  image: ^4.2.0
+
+  # Share
+  share_plus: ^10.0.2
+
+  # URL launcher
+  url_launcher: ^6.3.1
+
+  # Package info
+  package_info_plus: ^8.1.2
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/images/
+

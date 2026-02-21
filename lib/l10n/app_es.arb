@@ -1,0 +1,12 @@
+{
+  "appTitle": "Cámara de Rayos X Divertida",
+  "disclaimerTitle": "Aviso legal",
+  "disclaimerShort": "Esta aplicación proporciona imágenes simuladas de rayos X solo para entretenimiento.",
+  "disclaimerRead": "Leer",
+  "disclaimerAccept": "Aceptar aviso legal y política de privacidad",
+  "privacyPolicy": "Política de privacidad",
+  "terms": "Términos y condiciones",
+  "forceUpdateTitle": "Actualización requerida",
+  "forceUpdateMessage": "Hay una nueva versión de la aplicación disponible. Por favor actualice para continuar.",
+  "updateButton": "Actualizar ahora"
+}

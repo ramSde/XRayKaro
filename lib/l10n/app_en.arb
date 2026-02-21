@@ -1,0 +1,12 @@
+{
+  "appTitle": "Xray Fun Camera",
+  "disclaimerTitle": "Disclaimer",
+  "disclaimerShort": "This app provides simulated X-ray visuals for entertainment only.",
+  "disclaimerRead": "Read",
+  "disclaimerAccept": "Accept Disclaimer & Privacy Policy",
+  "privacyPolicy": "Privacy Policy",
+  "terms": "Terms & Conditions",
+  "forceUpdateTitle": "Update Required",
+  "forceUpdateMessage": "A new version of the app is available. Please update to continue.",
+  "updateButton": "Update Now"
+}
