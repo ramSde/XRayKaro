@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 
 class TermsOfUseScreen extends StatelessWidget {
@@ -23,24 +24,24 @@ class TermsOfUseScreen extends StatelessWidget {
               Center(
                 child: Column(
                   children: [
-                    const Text('📄', style: TextStyle(fontSize: 40)),
-                    const SizedBox(height: 10),
+                    Text('📄', style: TextStyle(fontSize: 40.sp)),
+                    SizedBox(height: 10.h),
                     ShaderMask(
                       shaderCallback: (r) =>
                           AppColors.neonGradient.createShader(r),
-                      child: const Text(
+                      child: Text(
                         'Terms of Use',
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    const Text(
+                    SizedBox(height: 6.h),
+                    Text(
                       'Effective Date: February 2026',
                       style: TextStyle(
-                          color: AppColors.textSecondary, fontSize: 12),
+                          color: AppColors.textSecondary, fontSize: 12.sp),
                     ),
                   ],
                 ),
@@ -84,9 +85,9 @@ class TermsOfUseScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 8, bottom: 32),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.danger.withValues(alpha: 0.1),
+                  color: AppColors.danger.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
+                  border: Border.all(color: AppColors.danger.withOpacity(0.3)),
                 ),
                 child: const Text(
                   '⚠️ IMPORTANT: This app is for entertainment ONLY. It does NOT perform real X-ray scanning or provide medical information of any kind.',
@@ -114,25 +115,25 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: EdgeInsets.only(bottom: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.neonBlue,
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: 15.sp,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Text(
             body,
-            style: const TextStyle(
-                color: AppColors.textSecondary, fontSize: 13, height: 1.7),
+            style: TextStyle(
+                color: AppColors.textSecondary, fontSize: 13.sp, height: 1.7),
           ),
-          const Divider(color: Color(0x2200D4FF), height: 28),
+          Divider(color: const Color(0x2200D4FF), height: 28.h),
         ],
       ),
     );

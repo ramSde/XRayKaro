@@ -68,9 +68,9 @@ class _ScanLinePainter extends CustomPainter {
         end: Alignment.bottomCenter,
         colors: [
           Colors.transparent,
-          AppColors.scanLine.withValues(alpha: 0.85),
-          Colors.white.withValues(alpha: 0.4),
-          AppColors.scanLine.withValues(alpha: 0.85),
+          AppColors.scanLine.withOpacity(0.85),
+          Colors.white.withOpacity(0.4),
+          AppColors.scanLine.withOpacity(0.85),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, y - 40, size.width, 80));
@@ -80,13 +80,13 @@ class _ScanLinePainter extends CustomPainter {
 
     // Sharp white center line
     final whitePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.9)
+      ..color = Colors.white.withOpacity(0.9)
       ..style = PaintingStyle.fill;
     canvas.drawRect(Rect.fromLTWH(0, y, size.width, 1), whitePaint);
 
     // Subtle area glow
     final areaPaint = Paint()
-      ..color = AppColors.scanLine.withValues(alpha: 0.08)
+      ..color = AppColors.scanLine.withOpacity(0.08)
       ..style = PaintingStyle.fill;
     canvas.drawRect(Rect.fromLTWH(0, y - 100, size.width, 100), areaPaint);
   }

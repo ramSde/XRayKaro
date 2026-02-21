@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 import '../services/storage_service.dart';
 
@@ -91,16 +92,16 @@ class _SplashScreenState extends State<SplashScreen>
                   return Transform.scale(
                     scale: _scaleAnim.value,
                     child: Container(
-                      width: 160,
-                      height: 160,
+                      width: 160.r,
+                      height: 160.r,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: AppColors.neonBlue
-                                .withValues(alpha: 0.5 * _glowAnim.value),
-                            blurRadius: 60 * _glowAnim.value,
-                            spreadRadius: 20 * _glowAnim.value,
+                                .withOpacity(0.5 * _glowAnim.value),
+                            blurRadius: 60.r * _glowAnim.value,
+                            spreadRadius: 20.r * _glowAnim.value,
                           ),
                         ],
                       ),
@@ -109,20 +110,20 @@ class _SplashScreenState extends State<SplashScreen>
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              AppColors.neonBlue.withValues(alpha: 0.2),
+                              AppColors.neonBlue.withOpacity(0.2),
                               Colors.transparent,
                             ],
                           ),
                           border: Border.all(
                             color: AppColors.neonBlue
-                                .withValues(alpha: 0.8 * _glowAnim.value),
-                            width: 2,
+                                .withOpacity(0.8 * _glowAnim.value),
+                            width: 2.r,
                           ),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             '💀',
-                            style: TextStyle(fontSize: 80),
+                            style: TextStyle(fontSize: 80.sp),
                           ),
                         ),
                       ),
@@ -141,22 +142,22 @@ class _SplashScreenState extends State<SplashScreen>
                     ShaderMask(
                       shaderCallback: (rect) =>
                           AppColors.neonGradient.createShader(rect),
-                      child: const Text(
+                      child: Text(
                         'Xray Fun Camera',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 30,
+                          fontSize: 30.sp,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.5,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6.h),
                     Text(
                       'Skeleton Prank Simulator',
                       style: TextStyle(
                         color: AppColors.neonBlue.withValues(alpha: 0.8),
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         letterSpacing: 2.0,
                       ),
                     ),
@@ -173,9 +174,9 @@ class _SplashScreenState extends State<SplashScreen>
                   width: 120,
                   child: LinearProgressIndicator(
                     backgroundColor:
-                        AppColors.neonBlue.withValues(alpha: 0.15),
+                        AppColors.neonBlue.withOpacity(0.15),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.neonBlue.withValues(alpha: 0.8),
+                      AppColors.neonBlue.withOpacity(0.8),
                     ),
                   ),
                 ),

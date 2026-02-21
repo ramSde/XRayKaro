@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 import '../services/storage_service.dart';
 
@@ -41,7 +42,7 @@ class _LanguageSelectorScreenState extends State<LanguageSelectorScreen> {
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.mainGradient),
         child: ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
           itemCount: AppStrings.languages.length,
           separatorBuilder: (context, index) => const Divider(
             color: Color(0x2200D4FF),
@@ -58,14 +59,14 @@ class _LanguageSelectorScreenState extends State<LanguageSelectorScreen> {
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               leading: Text(
                 _getFlagForLocale(code),
-                style: const TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 24.sp),
               ),
               title: Text(
                 lang['name']!,
                 style: TextStyle(
                   color: isSelected ? AppColors.neonBlue : AppColors.textPrimary,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                 ),
               ),
               trailing: isSelected

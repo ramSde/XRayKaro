@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 import '../core/utils.dart';
 import '../services/ad_service.dart';
+import '../services/sound_service.dart';
 import '../widgets/skeleton_overlay.dart';
 
 class ResultScreen extends StatefulWidget {
@@ -46,6 +48,8 @@ class _ResultScreenState extends State<ResultScreen>
   Future<void> _saveImage() async {
     if (_isSaving) return;
     setState(() => _isSaving = true);
+    
+    SoundService.hapticLight();
 
     try {
       final bytes = await File(widget.imagePath).readAsBytes();
@@ -53,6 +57,10 @@ class _ResultScreenState extends State<ResultScreen>
 
       if (mounted) {
         setState(() => _isSaving = false);
+        if (savedPath != null) {
+          SoundService.playSuccessSound();
+          SoundService.hapticMedium();
+        }
         AppUtils.showSnackBar(
           context,
           savedPath != null
@@ -70,6 +78,7 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   Future<void> _shareImage() async {
+    SoundService.hapticLight();
     try {
       await Share.shareXFiles(
         [XFile(widget.imagePath)],
@@ -141,7 +150,7 @@ class _ResultScreenState extends State<ResultScreen>
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withValues(alpha: 0.7),
+                        Colors.black.withOpacity(0.7),
                         Colors.transparent,
                       ],
                     ),
@@ -154,24 +163,24 @@ class _ResultScreenState extends State<ResultScreen>
                       ),
                       const Spacer(),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.w, vertical: 6.h),
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
-                              color: AppColors.neonBlue.withValues(alpha: 0.5)),
+                              color: AppColors.neonBlue.withOpacity(0.5)),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.auto_fix_high,
-                                color: AppColors.neonBlue, size: 14),
-                            SizedBox(width: 6),
+                                color: AppColors.neonBlue, size: 14.sp),
+                            SizedBox(width: 6.w),
                             Text(
                               'Fun Skeleton Effect Applied!',
                               style: TextStyle(
-                                  color: AppColors.neonBlue, fontSize: 11),
+                                  color: AppColors.neonBlue, fontSize: 11.sp),
                             ),
                           ],
                         ),
@@ -196,7 +205,7 @@ class _ResultScreenState extends State<ResultScreen>
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withValues(alpha: 0.9),
+                        Colors.black.withOpacity(0.9),
                         Colors.transparent,
                       ],
                     ),
@@ -208,12 +217,12 @@ class _ResultScreenState extends State<ResultScreen>
                       Text(
                         AppStrings.fullDisclaimer,
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.4),
-                          fontSize: 9,
+                          color: Colors.white.withOpacity(0.4),
+                          fontSize: 9.sp,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 14),
+                      SizedBox(height: 14.h),
 
                       // Action buttons
                       Row(
@@ -226,7 +235,7 @@ class _ResultScreenState extends State<ResultScreen>
                               onTap: () => Navigator.pop(context),
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10.w),
                           Expanded(
                             child: _ActionBtn(
                               icon: Icons.download_rounded,
@@ -235,7 +244,7 @@ class _ResultScreenState extends State<ResultScreen>
                               onTap: _isSaving ? () {} : _saveImage,
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10.w),
                           Expanded(
                             child: _ActionBtn(
                               icon: Icons.share_rounded,
@@ -265,17 +274,18 @@ class _CircleBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Container(
-        width: 38,
-        height: 38,
+      borderRadius: BorderRadius.circular(38.r / 2),
+      child: Ink(
+        width: 38.r,
+        height: 38.r,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.black.withValues(alpha: 0.5),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+          color: Colors.black.withOpacity(0.5),
+          border: Border.all(color: Colors.white.withOpacity(0.3)),
         ),
-        child: Icon(icon, color: Colors.white, size: 16),
+        child: Icon(icon, color: Colors.white, size: 16.sp),
       ),
     );
   }
@@ -296,24 +306,25 @@ class _ActionBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+      borderRadius: BorderRadius.circular(12.r),
+      child: Ink(
+        padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.5)),
+          color: color.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: color.withOpacity(0.5)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 22),
-            const SizedBox(height: 4),
+            Icon(icon, color: color, size: 22.sp),
+            SizedBox(height: 4.h),
             Text(
               label,
               style: TextStyle(
-                  color: color, fontSize: 11, fontWeight: FontWeight.w600),
+                  color: color, fontSize: 11.sp, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -327,7 +338,7 @@ class _NoisePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.03)
+      ..color = Colors.white.withOpacity(0.03)
       ..style = PaintingStyle.fill;
 
     // Draw subtle horizontal scan lines

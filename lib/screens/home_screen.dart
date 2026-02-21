@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 import '../services/ad_service.dart';
 import '../widgets/skeleton_overlay.dart';
@@ -87,17 +88,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 leading: Container(
-                  margin: const EdgeInsets.all(8),
+                  margin: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
-                    color: AppColors.cardBg.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(12),
+                    color: AppColors.cardBg.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Semantics(
                     button: true,
                     label: 'Open navigation menu',
                     child: IconButton(
-                      icon: const Icon(Icons.menu_rounded,
-                          color: AppColors.neonBlue),
+                      icon: Icon(Icons.menu_rounded,
+                          color: AppColors.neonBlue, size: 24.sp),
                       onPressed: () => Scaffold.of(ctx).openDrawer(),
                     ),
                   ),
@@ -117,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     button: true,
                     label: 'Open settings',
                     child: IconButton(
-                      icon: const Icon(Icons.settings_outlined,
-                          color: AppColors.neonBlue),
+                      icon: Icon(Icons.settings_outlined,
+                          color: AppColors.neonBlue, size: 24.sp),
                       onPressed: () =>
                           Navigator.pushNamed(context, '/settings'),
                     ),
@@ -155,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         boxShadow: [
                                           BoxShadow(
                                             color: AppColors.neonBlue
-                                                .withValues(alpha: 0.25),
+                                                .withOpacity(0.25),
                                             blurRadius: 50,
                                             spreadRadius: 15,
                                           ),
@@ -182,34 +183,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Semantics(
                       button: true,
                       label: 'Start X-ray scan camera',
-                      child: GestureDetector(
+                      child: InkWell(
                         onTap: _startScan,
-                        child: Container(
-                          height: 70,
+                        borderRadius: BorderRadius.circular(20.r),
+                        child: Ink(
+                          height: 70.h,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             gradient: AppColors.neonGradient,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20.r),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.neonBlue.withValues(alpha: 0.4),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
+                                color: AppColors.neonBlue.withOpacity(0.4),
+                                blurRadius: 20.r,
+                                offset: Offset(0, 8.h),
                               ),
                             ],
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.camera_rounded,
-                                    color: Colors.white, size: 28),
-                                SizedBox(width: 12),
+                                    color: Colors.white, size: 28.sp),
+                                SizedBox(width: 12.w),
                                 Text(
                                   'START X-RAY SCAN',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 18,
+                                    fontSize: 18.sp,
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1.5,
                                   ),
@@ -224,13 +226,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     const SizedBox(height: 30),
 
                     // ── Secondary Actions ─────────────────────────────
-                    const Row(
+                    Row(
                       children: [
                         _FeatureTile(
-                            icon: '📁', label: AppStrings.actionGallery),
-                        SizedBox(width: 16),
+                          icon: '📁', 
+                          label: AppStrings.actionGallery,
+                          onTap: () => Navigator.pushNamed(context, '/gallery'),
+                        ),
+                        SizedBox(width: 16.w),
                         _FeatureTile(
-                            icon: '🖼️', label: AppStrings.actionSamples),
+                          icon: '🖼️', 
+                          label: AppStrings.actionSamples,
+                          onTap: () => Navigator.pushNamed(context, '/samples'),
+                        ),
                       ],
                     ),
 
@@ -238,26 +246,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                     // ── Info Card ──────────────────────────────────────
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(20.r),
                       decoration: BoxDecoration(
                         color: AppColors.cardBg,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
-                            color: AppColors.neonBlue.withValues(alpha: 0.15)),
+                            color: AppColors.neonBlue.withOpacity(0.15)),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10.r),
                             decoration: BoxDecoration(
-                              color: const Color(0xAAFF3D71).withValues(alpha: 0.12),
+                              color: Color(0xAAFF3D71).withOpacity(0.12),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.info_outline_rounded,
-                                color: AppColors.danger, size: 24),
+                            child: Icon(Icons.info_outline_rounded,
+                                color: AppColors.danger, size: 24.sp),
                           ),
-                          const SizedBox(width: 16),
-                          const Expanded(
+                          SizedBox(width: 16.w),
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -266,14 +274,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 15),
+                                      fontSize: 15.sp),
                                 ),
-                                SizedBox(height: 4),
+                                SizedBox(height: 4.h),
                                 Text(
                                   'This app is for fun only and doesn\'t scan real bones.',
                                   style: TextStyle(
                                       color: AppColors.textSecondary,
-                                      fontSize: 12),
+                                      fontSize: 12.sp),
                                 ),
                               ],
                             ),
@@ -296,10 +304,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         height: 60,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: AppColors.cardBg.withValues(alpha: 0.3),
+                          color: AppColors.cardBg.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                              color: AppColors.neonBlue.withValues(alpha: 0.15)),
+                              color: AppColors.neonBlue.withOpacity(0.15)),
                         ),
                         child: const Center(
                           child: Text(
@@ -431,23 +439,24 @@ class _OutlineButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Container(
+      borderRadius: BorderRadius.circular(14.r),
+      child: Ink(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.neonPurple.withValues(alpha: 0.6)),
-          color: AppColors.neonPurple.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(color: AppColors.neonPurple.withOpacity(0.6)),
+          color: AppColors.neonPurple.withOpacity(0.08),
         ),
         child: Center(
           child: Text(
             '$icon $label',
-            style: const TextStyle(
-              color: Color(0xFFC4AAFF),
+            style: TextStyle(
+              color: const Color(0xFFC4AAFF),
               fontWeight: FontWeight.w600,
-              fontSize: 15,
+              fontSize: 15.sp,
             ),
           ),
         ),
@@ -459,31 +468,36 @@ class _OutlineButton extends StatelessWidget {
 class _FeatureTile extends StatelessWidget {
   final String icon;
   final String label;
-  const _FeatureTile({required this.icon, required this.label});
+  final VoidCallback onTap;
+  const _FeatureTile({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: AppColors.cardBg,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.neonBlue.withValues(alpha: 0.15)),
-        ),
-        child: Column(
-          children: [
-            Text(icon, style: const TextStyle(fontSize: 24)),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12.r),
+        child: Ink(
+          padding: EdgeInsets.symmetric(vertical: 14.h),
+          decoration: BoxDecoration(
+            color: AppColors.cardBg,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: AppColors.neonBlue.withOpacity(0.15)),
+          ),
+          child: Column(
+            children: [
+              Text(icon, style: TextStyle(fontSize: 24.sp)),
+              SizedBox(height: 8.h),
+              Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

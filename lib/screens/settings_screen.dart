@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 import '../services/storage_service.dart';
 import '../main.dart';
@@ -45,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.mainGradient),
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.r),
           children: [
             // ── Preferences ────────────────────────────────────────────────
             const _SectionHeader('Preferences'),
@@ -90,7 +91,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 12),
             _SettingsCard(children: [
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16.r),
                 child: SegmentedButton<String>(
                   segments: const [
                     ButtonSegment(
@@ -118,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     backgroundColor: WidgetStateProperty.resolveWith<Color?>(
                       (Set<WidgetState> states) {
                         if (states.contains(WidgetState.selected)) {
-                          return AppColors.neonBlue.withValues(alpha: 0.2);
+                          return AppColors.neonBlue.withOpacity(0.2);
                         }
                         return null;
                       },
@@ -246,6 +247,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _setTheme(String value) async {
     await StorageService.setThemeMode(value);
     setState(() => _themeMode = value);
+    
+    if (mounted) {
+      final mode = switch (value) {
+        'light' => ThemeMode.light,
+        'dark' => ThemeMode.dark,
+        _ => ThemeMode.system,
+      };
+      XrayFunApp.setThemeMode(context, mode);
+    }
   }
 }
 
@@ -260,8 +270,8 @@ class _SectionHeader extends StatelessWidget {
     return Text(
       title.toUpperCase(),
       style: TextStyle(
-        color: AppColors.neonBlue.withValues(alpha: 0.8),
-        fontSize: 11,
+        color: AppColors.neonBlue.withOpacity(0.8),
+        fontSize: 11.sp,
         fontWeight: FontWeight.w700,
         letterSpacing: 1.4,
       ),
@@ -278,12 +288,12 @@ class _SettingsCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
-            color: AppColors.neonBlue.withValues(alpha: 0.15)),
+            color: AppColors.neonBlue.withOpacity(0.15)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         child: Column(children: children),
       ),
     );

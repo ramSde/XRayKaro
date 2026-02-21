@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 
 class PrimaryButton extends StatefulWidget {
@@ -63,30 +64,30 @@ class _PrimaryButtonState extends State<PrimaryButton>
         scale: _scaleAnim,
         child: Container(
           width: widget.width ?? double.infinity,
-          height: widget.height,
+          height: widget.height.h,
           decoration: BoxDecoration(
             gradient: AppColors.buttonGradient,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: AppColors.neonBlue.withValues(alpha: 0.4),
-                blurRadius: 20,
-                spreadRadius: 2,
-                offset: const Offset(0, 4),
+                color: AppColors.neonBlue.withOpacity(0.4),
+                blurRadius: 20.r,
+                spreadRadius: 2.r,
+                offset: Offset(0, 4.h),
               ),
             ],
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               onTap: widget.onPressed,
               child: Center(
                 child: widget.isLoading
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
+                    ? SizedBox(
+                        width: 24.r,
+                        height: 24.r,
+                        child: const CircularProgressIndicator(
                           color: Colors.white,
                           strokeWidth: 2.5,
                         ),
@@ -96,14 +97,14 @@ class _PrimaryButtonState extends State<PrimaryButton>
                         children: [
                           if (widget.icon != null) ...[
                             Icon(widget.icon,
-                                color: Colors.white, size: widget.fontSize + 2),
-                            const SizedBox(width: 8),
+                                color: Colors.white, size: widget.fontSize.sp + 2.sp),
+                            SizedBox(width: 8.w),
                           ],
                           Text(
                             widget.text,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: widget.fontSize,
+                              fontSize: widget.fontSize.sp,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 0.8,
                             ),

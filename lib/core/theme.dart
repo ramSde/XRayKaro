@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'constants.dart';
 
 class AppTheme {
@@ -16,48 +17,48 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppColors.bgDark,
       fontFamily: 'Roboto',
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         displayLarge: TextStyle(
           color: AppColors.textPrimary,
-          fontSize: 32,
+          fontSize: 32.sp,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.2,
         ),
         headlineMedium: TextStyle(
           color: AppColors.textPrimary,
-          fontSize: 24,
+          fontSize: 24.sp,
           fontWeight: FontWeight.w700,
         ),
         titleLarge: TextStyle(
           color: AppColors.textPrimary,
-          fontSize: 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.w600,
         ),
         bodyLarge: TextStyle(
           color: AppColors.textSecondary,
-          fontSize: 16,
+          fontSize: 16.sp,
           height: 1.6,
         ),
         bodyMedium: TextStyle(
           color: AppColors.textSecondary,
-          fontSize: 14,
+          fontSize: 14.sp,
           height: 1.5,
         ),
         bodySmall: TextStyle(
           color: AppColors.textSecondary,
-          fontSize: 12,
+          fontSize: 12.sp,
           height: 1.4,
         ),
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleTextStyle: TextStyle(
           color: AppColors.textPrimary,
-          fontSize: 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.w700,
         ),
-        iconTheme: IconThemeData(color: AppColors.neonBlue),
+        iconTheme: const IconThemeData(color: AppColors.neonBlue),
       ),
       cardTheme: CardThemeData(
         color: AppColors.cardBg,
@@ -72,11 +73,11 @@ class AppTheme {
           backgroundColor: AppColors.neonBlue,
           foregroundColor: Colors.black,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          textStyle: const TextStyle(
-            fontSize: 16,
+          padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+          textStyle: TextStyle(
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),
         ),

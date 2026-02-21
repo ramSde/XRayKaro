@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 import '../services/permission_service.dart';
 import '../services/storage_service.dart';
+import '../services/sound_service.dart';
 import '../widgets/animated_scan_line.dart';
 import '../widgets/skeleton_overlay.dart';
 import '../main.dart';
@@ -88,6 +90,7 @@ class _CameraScreenState extends State<CameraScreen>
 
   Future<void> _switchCamera() async {
     if (_cameras.length < 2) return;
+    SoundService.hapticLight();
     _selectedCameraIndex = (_selectedCameraIndex + 1) % _cameras.length;
     setState(() => _isInitialized = false);
     await _startCamera(_selectedCameraIndex);
@@ -96,6 +99,9 @@ class _CameraScreenState extends State<CameraScreen>
   Future<void> _capturePhoto() async {
     if (_controller == null || !_controller!.value.isInitialized) return;
     if (_isCapturing) return;
+
+    SoundService.hapticMedium();
+    SoundService.playScanSound();
 
     setState(() {
       _isCapturing = true;
@@ -112,6 +118,9 @@ class _CameraScreenState extends State<CameraScreen>
     try {
       final XFile file = await _controller!.takePicture();
       await StorageService.incrementScanCount();
+      
+      SoundService.playCaptureSound();
+      SoundService.hapticHeavy();
 
       if (mounted) {
         setState(() {
@@ -179,7 +188,7 @@ class _CameraScreenState extends State<CameraScreen>
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: AppColors.neonBlue.withValues(alpha: 0.6),
+                  color: AppColors.neonBlue.withOpacity(0.6),
                   width: 2,
                 ),
               ),
@@ -210,7 +219,7 @@ class _CameraScreenState extends State<CameraScreen>
           // ── Scanning Overlay ─────────────────────────────────────────────
           if (_isScanning)
             Container(
-              color: Colors.black.withValues(alpha: 0.7),
+              color: Colors.black.withOpacity(0.7),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -230,7 +239,7 @@ class _CameraScreenState extends State<CameraScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 60),
                       child: LinearProgressIndicator(
                         value: _scanProgress,
-                        backgroundColor: AppColors.neonBlue.withValues(alpha: 0.15),
+                        backgroundColor: AppColors.neonBlue.withOpacity(0.15),
                         valueColor: const AlwaysStoppedAnimation<Color>(
                             AppColors.neonBlue),
                       ),
@@ -239,7 +248,7 @@ class _CameraScreenState extends State<CameraScreen>
                     Text(
                       '${(_scanProgress * 100).toInt()}%',
                       style: TextStyle(
-                          color: AppColors.neonBlue.withValues(alpha: 0.8),
+                          color: AppColors.neonBlue.withOpacity(0.8),
                           fontSize: 14),
                     ),
                   ],
@@ -267,18 +276,18 @@ class _CameraScreenState extends State<CameraScreen>
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.w, vertical: 6.h),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(20.r),
                         border: Border.all(
-                            color: AppColors.neonBlue.withValues(alpha: 0.4)),
+                            color: AppColors.neonBlue.withOpacity(0.4)),
                       ),
-                      child: const Text(
+                      child: Text(
                         '🎭 Fun Filter Active',
                         style:
-                            TextStyle(color: AppColors.neonBlue, fontSize: 12),
+                            TextStyle(color: AppColors.neonBlue, fontSize: 12.sp),
                       ),
                     ),
                     if (_cameras.length > 1)
@@ -312,7 +321,7 @@ class _CameraScreenState extends State<CameraScreen>
                     Text(
                       AppStrings.entertainmentDisclaimer,
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.5),
+                        color: Colors.white.withOpacity(0.5),
                         fontSize: 10,
                       ),
                       textAlign: TextAlign.center,
@@ -324,31 +333,31 @@ class _CameraScreenState extends State<CameraScreen>
                       label: 'Take photo',
                       button: true,
                       enabled: !_isCapturing,
-                      child: GestureDetector(
+                      child: InkWell(
                         onTap: _isCapturing ? null : _capturePhoto,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 78,
-                          height: 78,
+                        borderRadius: BorderRadius.circular(78.r / 2),
+                        child: Ink(
+                          width: 78.r,
+                          height: 78.r,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: _isCapturing
                                 ? Colors.grey
-                                : AppColors.neonBlue.withValues(alpha: 0.9),
+                                : AppColors.neonBlue.withOpacity(0.9),
                             boxShadow: [
                               if (!_isCapturing)
                                 BoxShadow(
-                                  color: AppColors.neonBlue.withValues(alpha: 0.5),
-                                  blurRadius: 20,
-                                  spreadRadius: 5,
+                                  color: AppColors.neonBlue.withOpacity(0.5),
+                                  blurRadius: 20.r,
+                                  spreadRadius: 5.r,
                                 ),
                             ],
-                            border: Border.all(color: Colors.white, width: 4),
+                            border: Border.all(color: Colors.white, width: 4.r),
                           ),
                           child: Icon(
                             Icons.camera_rounded,
                             color: Colors.white,
-                            size: _isCapturing ? 28 : 36,
+                            size: _isCapturing ? 28.sp : 36.sp,
                           ),
                         ),
                       ),
@@ -465,17 +474,18 @@ class _CircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
+      borderRadius: BorderRadius.circular(40.r / 2),
+      child: Ink(
+        width: 40.r,
+        height: 40.r,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.black.withValues(alpha: 0.5),
-          border: Border.all(color: AppColors.neonBlue.withValues(alpha: 0.4)),
+          color: Colors.black.withOpacity(0.5),
+          border: Border.all(color: AppColors.neonBlue.withOpacity(0.4)),
         ),
-        child: Icon(icon, color: Colors.white, size: 18),
+        child: Icon(icon, color: Colors.white, size: 18.sp),
       ),
     );
   }

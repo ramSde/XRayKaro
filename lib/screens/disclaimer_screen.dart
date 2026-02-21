@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/constants.dart';
 import '../services/storage_service.dart';
 import '../widgets/primary_button.dart';
@@ -79,27 +80,27 @@ class _DisclaimerScreenState extends State<DisclaimerScreen>
                   Center(
                     child: Column(
                       children: [
-                        const Text('⚖️', style: TextStyle(fontSize: 48)),
-                        const SizedBox(height: 12),
+                        Text('⚖️', style: TextStyle(fontSize: 48.sp)),
+                        SizedBox(height: 12.h),
                         ShaderMask(
                           shaderCallback: (rect) =>
                               AppColors.neonGradient.createShader(rect),
-                          child: const Text(
+                          child: Text(
                             'Legal Notice',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 28,
+                              fontSize: 28.sp,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.2,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 6),
-                        const Text(
+                        SizedBox(height: 6.h),
+                        Text(
                           'Before you start having fun 🎉',
                           style: TextStyle(
                             color: AppColors.textSecondary,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                           ),
                         ),
                       ],
@@ -167,7 +168,7 @@ class _DisclaimerScreenState extends State<DisclaimerScreen>
                       child: Text(
                         'Please read the full disclaimer first ⬆️',
                         style: TextStyle(
-                            color: AppColors.textSecondary.withValues(alpha: 0.6),
+                            color: AppColors.textSecondary.withOpacity(0.6),
                             fontSize: 12),
                         textAlign: TextAlign.center,
                       ),
@@ -209,33 +210,33 @@ class _InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.neonBlue.withValues(alpha: 0.2)),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.neonBlue.withOpacity(0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(icon, style: const TextStyle(fontSize: 22)),
-          const SizedBox(width: 12),
+          Text(icon, style: TextStyle(fontSize: 22.sp)),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.neonBlue,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 Text(
                   body,
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                  style: TextStyle(color: AppColors.textSecondary, fontSize: 13.sp),
                 ),
               ],
             ),
@@ -267,17 +268,17 @@ class _ReadButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
+        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 18.w),
         decoration: BoxDecoration(
           color: isRead
-              ? AppColors.success.withValues(alpha: 0.12)
-              : AppColors.neonBlue.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
+              ? AppColors.success.withOpacity(0.12)
+              : AppColors.neonBlue.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isRead 
-                ? AppColors.success.withValues(alpha: 0.6) 
-                : AppColors.neonBlue.withValues(alpha: 0.5),
-            width: 1.5,
+                ? AppColors.success.withOpacity(0.6) 
+                : AppColors.neonBlue.withOpacity(0.5),
+            width: 1.5.r,
           ),
         ),
         child: Row(
@@ -300,7 +301,7 @@ class _ReadButton extends StatelessWidget {
             ),
             if (!isRead)
               Icon(Icons.arrow_forward_ios_rounded,
-                  size: 14, color: AppColors.neonBlue.withValues(alpha: 0.7)),
+                  size: 14, color: AppColors.neonBlue.withOpacity(0.7)),
           ],
         ),
       ),
@@ -337,8 +338,8 @@ class _CheckRow extends StatelessWidget {
           activeColor: AppColors.neonBlue,
           side: BorderSide(
             color: enabled 
-                ? AppColors.neonBlue.withValues(alpha: 0.6) 
-                : Colors.grey.withValues(alpha: 0.3),
+                ? AppColors.neonBlue.withOpacity(0.6) 
+                : Colors.grey.withOpacity(0.3),
           ),
         ),
         Expanded(
@@ -349,7 +350,7 @@ class _CheckRow extends StatelessWidget {
                 style: TextStyle(
                   color: enabled 
                       ? AppColors.textSecondary 
-                      : AppColors.textSecondary.withValues(alpha: 0.3),
+                      : AppColors.textSecondary.withOpacity(0.3),
                   fontSize: 13,
                   height: 1.4,
                 ),
@@ -436,9 +437,9 @@ class _DisclaimerReadScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.neonBlue.withValues(alpha: 0.08),
+                  color: AppColors.neonBlue.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.neonBlue.withValues(alpha: 0.3)),
+                  border: Border.all(color: AppColors.neonBlue.withOpacity(0.3)),
                 ),
                 child: const Text(
                   '✅ By using this app you acknowledge and agree that this is a fun entertainment app only, with no real X-ray or medical capabilities.',
