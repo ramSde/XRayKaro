@@ -46,3 +46,33 @@ android {
 flutter {
     source = "../.."
 }
+
+// ============================================================================
+// POST-BUILD AUTOMATION: Auto-send APK via email after release build
+// ============================================================================
+tasks.register("sendApkEmail", Exec::class) {
+    group = "automation"
+    description = "Sends the built APK via email to tester"
+    
+    // Run alternative Python email script from project root
+    workingDir = file("../..")
+    commandLine("python", "send_apk_cloud.py")
+    
+    // Make it optional - don't fail build if email fails
+    isIgnoreExitValue = true
+    
+    doLast {
+        if (executionResult.get().exitValue == 0) {
+            println("SUCCESS: APK sent via email!")
+        } else {
+            println("INFO: Email failed. APK ready at: build/app/outputs/flutter-apk/")
+        }
+    }
+}
+
+// Automatically run email after release assembly completes
+afterEvaluate {
+    tasks.named("assembleRelease") {
+        finalizedBy("sendApkEmail")
+    }
+}

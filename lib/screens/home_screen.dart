@@ -3,6 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
 import '../core/constants.dart';
 import '../services/ad_service.dart';
 import '../widgets/skeleton_overlay.dart';
@@ -54,7 +55,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _shareApp() {
-    Share.share('Check out this cool Xray Fun Camera app! 💀\nDownload it now: ${AppStrings.playStoreUrl}');
+    final l10n = AppLocalizations.of(context)!;
+    Share.share('${l10n.appTitle} 💀\n${AppStrings.playStoreUrl}');
   }
 
   void _rateApp() async {
@@ -71,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.bgDark,
@@ -106,9 +109,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 title: ShaderMask(
                   shaderCallback: (r) =>
                       AppColors.neonGradient.createShader(r),
-                  child: const Text(
-                    'Xray Fun Camera',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.appTitle,
+                    style: const TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -208,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     color: Colors.white, size: 28.sp),
                                 SizedBox(width: 12.w),
                                 Text(
-                                  'START X-RAY SCAN',
+                                  l10n.startScan.toUpperCase(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18.sp,
@@ -229,65 +232,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Row(
                       children: [
                         _FeatureTile(
-                          icon: '📁', 
-                          label: AppStrings.actionGallery,
+                          icon: Icons.history_rounded, 
+                          label: l10n.gallery,
                           onTap: () => Navigator.pushNamed(context, '/gallery'),
                         ),
                         SizedBox(width: 16.w),
                         _FeatureTile(
-                          icon: '🖼️', 
-                          label: AppStrings.actionSamples,
+                          icon: Icons.info_outline_rounded, 
+                          label: l10n.samples,
                           onTap: () => Navigator.pushNamed(context, '/samples'),
                         ),
                       ],
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // ── Info Card ──────────────────────────────────────
-                    Container(
-                      padding: EdgeInsets.all(20.r),
-                      decoration: BoxDecoration(
-                        color: AppColors.cardBg,
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(
-                            color: AppColors.neonBlue.withOpacity(0.15)),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10.r),
-                            decoration: BoxDecoration(
-                              color: Color(0xAAFF3D71).withOpacity(0.12),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.info_outline_rounded,
-                                color: AppColors.danger, size: 24.sp),
-                          ),
-                          SizedBox(width: 16.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Prank Disclaimer',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.sp),
-                                ),
-                                SizedBox(height: 4.h),
-                                Text(
-                                  'This app is for fun only and doesn\'t scan real bones.',
-                                  style: TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 12.sp),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
 
                     const SizedBox(height: 24),
@@ -328,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       label: 'Rate app on Play Store',
                       child: _OutlineButton(
                           icon: '🌟',
-                          label: 'Support Us - Rate 5 Stars',
+                          label: l10n.rateApp,
                           onTap: _rateApp),
                     ),
                     const SizedBox(height: 12),
@@ -336,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       button: true,
                       label: 'Share app with friends',
                       child: _OutlineButton(
-                          icon: '🔗', label: 'Share With Friends', onTap: _shareApp),
+                          icon: '🔗', label: l10n.shareApp, onTap: _shareApp),
                     ),
                   ],
                 ),
@@ -349,47 +304,49 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildDrawer(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Drawer(
       backgroundColor: AppColors.bgDark2,
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               gradient: AppColors.mainGradient,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text('💀', style: TextStyle(fontSize: 36)),
-                SizedBox(height: 8),
+                const Icon(Icons.medical_information_outlined,
+                    color: AppColors.neonBlue, size: 36),
+                const SizedBox(height: 8),
                 Text(
-                  'Xray Fun Camera',
-                  style: TextStyle(
+                  l10n.appTitle,
+                  style: const TextStyle(
                       color: AppColors.neonBlue,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
-                Text('Skeleton Prank Simulator',
-                    style: TextStyle(
+                Text(l10n.appSubtitle,
+                    style: const TextStyle(
                         color: AppColors.textSecondary, fontSize: 12)),
               ],
             ),
           ),
           _DrawerItem(
               icon: Icons.home_outlined,
-              label: 'Home',
+              label: l10n.appTitle,
               onTap: () => Navigator.pop(context)),
           _DrawerItem(
               icon: Icons.camera_alt_outlined,
-              label: 'Start Scan',
+              label: l10n.startScan,
               onTap: () {
                 Navigator.pop(context);
                 _startScan();
               }),
           _DrawerItem(
               icon: Icons.settings_outlined,
-              label: 'Settings',
+              label: l10n.settings,
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/settings');
@@ -397,28 +354,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           const Divider(color: Color(0x2200D4FF)),
           _DrawerItem(
               icon: Icons.lock_outline,
-              label: 'Privacy Policy',
+              label: l10n.privacyPolicy,
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/privacy');
               }),
           _DrawerItem(
               icon: Icons.description_outlined,
-              label: 'Terms of Use',
+              label: l10n.termsOfUse,
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/terms');
               }),
           _DrawerItem(
               icon: Icons.share_outlined,
-              label: 'Share App',
+              label: l10n.shareApp,
               onTap: () {
                 Navigator.pop(context);
                 _shareApp();
               }),
           _DrawerItem(
               icon: Icons.star_outline_rounded,
-              label: 'Rate App',
+              label: l10n.rateApp,
               onTap: () {
                 Navigator.pop(context);
                 _rateApp();
@@ -466,7 +423,7 @@ class _OutlineButton extends StatelessWidget {
 }
 
 class _FeatureTile extends StatelessWidget {
-  final String icon;
+  final IconData icon;
   final String label;
   final VoidCallback onTap;
   const _FeatureTile({required this.icon, required this.label, required this.onTap});
@@ -486,7 +443,7 @@ class _FeatureTile extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Text(icon, style: TextStyle(fontSize: 24.sp)),
+              Icon(icon, color: AppColors.neonBlue, size: 24.sp),
               SizedBox(height: 8.h),
               Text(
                 label,

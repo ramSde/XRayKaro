@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../core/constants.dart';
+
+enum SkeletonStyle {
+  full,      // Full body skeleton
+  skull,     // Just skull
+  hands,     // Hand bones
+  ribcage,   // Ribcage focus
+}
 
 /// Widget that overlays a drawn skeleton on top of an image
 class SkeletonOverlay extends StatefulWidget {
   final bool animate;
   final double opacity;
   final Color tintColor;
+  final SkeletonStyle style;
 
   const SkeletonOverlay({
     super.key,
     this.animate = true,
     this.opacity = 0.6,
     this.tintColor = AppColors.neonBlue,
+    this.style = SkeletonStyle.full,
   });
 
   @override
@@ -50,12 +60,14 @@ class _SkeletonOverlayState extends State<SkeletonOverlay>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _pulseAnim,
-      builder: (ctx, _) {
+      builder: (context, child) {
         return CustomPaint(
           painter: _SkeletonPainter(
             opacity: widget.opacity * _pulseAnim.value,
             color: widget.tintColor,
+            style: widget.style,
           ),
+          child: Container(),
         );
       },
     );
@@ -65,109 +77,209 @@ class _SkeletonOverlayState extends State<SkeletonOverlay>
 class _SkeletonPainter extends CustomPainter {
   final double opacity;
   final Color color;
+  final SkeletonStyle style;
 
-  _SkeletonPainter({required this.opacity, required this.color});
+  _SkeletonPainter({
+    required this.opacity,
+    required this.color,
+    required this.style,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(opacity)
-      ..strokeWidth = 2.0
+      ..color = color.withValues(alpha: opacity)
+      ..strokeWidth = 3.0
       ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, opacity * 3);
+      ..strokeCap = StrokeCap.round;
 
-    final w = size.width;
-    final h = size.height;
+    final fillPaint = Paint()
+      ..color = color.withValues(alpha: opacity * 0.3)
+      ..style = PaintingStyle.fill;
 
-    final cx = w / 2;
+    switch (style) {
+      case SkeletonStyle.full:
+        _drawFullSkeleton(canvas, size, paint, fillPaint);
+        break;
+      case SkeletonStyle.skull:
+        _drawSkull(canvas, size, paint, fillPaint);
+        break;
+      case SkeletonStyle.hands:
+        _drawHands(canvas, size, paint, fillPaint);
+        break;
+      case SkeletonStyle.ribcage:
+        _drawRibcage(canvas, size, paint, fillPaint);
+        break;
+    }
+  }
 
-    // ─── Skull ────────────────────────────────────────────────────────────────
-    canvas.drawOval(
-        Rect.fromCenter(center: Offset(cx, h * 0.08), width: w * 0.18, height: h * 0.12), paint);
-    // Eye sockets
-    canvas.drawCircle(Offset(cx - w * 0.04, h * 0.075), w * 0.025, paint);
-    canvas.drawCircle(Offset(cx + w * 0.04, h * 0.075), w * 0.025, paint);
-    // Jaw
-    canvas.drawArc(
-        Rect.fromCenter(center: Offset(cx, h * 0.1), width: w * 0.14, height: h * 0.06),
-        0.2, 2.7, false, paint);
+  void _drawFullSkeleton(Canvas canvas, Size size, Paint paint, Paint fillPaint) {
+    final centerX = size.width / 2;
+    final headY = size.height * 0.15;
+    final neckY = size.height * 0.22;
+    final shoulderY = size.height * 0.28;
+    final chestY = size.height * 0.45;
+    final waistY = size.height * 0.55;
+    final hipY = size.height * 0.60;
+    final kneeY = size.height * 0.75;
+    final footY = size.height * 0.92;
 
-    // ─── Spine ────────────────────────────────────────────────────────────────
-    for (int i = 0; i < 12; i++) {
-      final y = h * 0.15 + i * (h * 0.04);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromCenter(center: Offset(cx, y), width: w * 0.06, height: h * 0.025),
-          const Radius.circular(3),
-        ),
+    // Skull
+    canvas.drawCircle(Offset(centerX, headY), size.width * 0.08, paint);
+    canvas.drawCircle(Offset(centerX - 15, headY - 5), 8, fillPaint); // Eye
+    canvas.drawCircle(Offset(centerX + 15, headY - 5), 8, fillPaint); // Eye
+
+    // Spine
+    canvas.drawLine(Offset(centerX, neckY), Offset(centerX, hipY), paint);
+
+    // Ribcage
+    for (int i = 0; i < 6; i++) {
+      final y = shoulderY + (i * (chestY - shoulderY) / 6);
+      final width = size.width * 0.12 - (i * 3);
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(centerX, y), width: width * 2, height: 20),
+        math.pi,
+        math.pi,
+        false,
         paint,
       );
-      // Ribs (alternating)
-      if (i >= 1 && i <= 6) {
-        // Left rib
-        final path1 = Path();
-        path1.moveTo(cx - w * 0.03, y);
-        path1.quadraticBezierTo(cx - w * 0.15, y + h * 0.01, cx - w * 0.18, y + h * 0.03);
-        canvas.drawPath(path1, paint);
-        // Right rib
-        final path2 = Path();
-        path2.moveTo(cx + w * 0.03, y);
-        path2.quadraticBezierTo(cx + w * 0.15, y + h * 0.01, cx + w * 0.18, y + h * 0.03);
-        canvas.drawPath(path2, paint);
-      }
     }
 
-    // ─── Pelvis ───────────────────────────────────────────────────────────────
-    final pelvisY = h * 0.62;
-    canvas.drawOval(
-        Rect.fromCenter(center: Offset(cx, pelvisY), width: w * 0.25, height: h * 0.07), paint);
-    canvas.drawOval(
-        Rect.fromCenter(center: Offset(cx, pelvisY), width: w * 0.12, height: h * 0.04), paint);
+    // Shoulders
+    canvas.drawLine(
+      Offset(centerX - size.width * 0.15, shoulderY),
+      Offset(centerX + size.width * 0.15, shoulderY),
+      paint,
+    );
 
-    // ─── Left Leg ─────────────────────────────────────────────────────────────
-    // Femur
-    final legTopY = pelvisY + h * 0.04;
-    canvas.drawLine(Offset(cx - w * 0.08, legTopY), Offset(cx - w * 0.1, h * 0.80), paint);
-    // Tibia
-    canvas.drawLine(Offset(cx - w * 0.1, h * 0.80), Offset(cx - w * 0.09, h * 0.95), paint);
-    // Fibula
-    canvas.drawLine(Offset(cx - w * 0.1, h * 0.80), Offset(cx - w * 0.12, h * 0.95), paint);
-    // Foot
-    canvas.drawLine(Offset(cx - w * 0.09, h * 0.95), Offset(cx - w * 0.18, h * 0.97), paint);
+    // Arms
+    canvas.drawLine(
+      Offset(centerX - size.width * 0.15, shoulderY),
+      Offset(centerX - size.width * 0.18, waistY),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(centerX + size.width * 0.15, shoulderY),
+      Offset(centerX + size.width * 0.18, waistY),
+      paint,
+    );
 
-    // ─── Right Leg ────────────────────────────────────────────────────────────
-    canvas.drawLine(Offset(cx + w * 0.08, legTopY), Offset(cx + w * 0.1, h * 0.80), paint);
-    canvas.drawLine(Offset(cx + w * 0.1, h * 0.80), Offset(cx + w * 0.09, h * 0.95), paint);
-    canvas.drawLine(Offset(cx + w * 0.1, h * 0.80), Offset(cx + w * 0.12, h * 0.95), paint);
-    canvas.drawLine(Offset(cx + w * 0.09, h * 0.95), Offset(cx + w * 0.18, h * 0.97), paint);
+    // Pelvis
+    canvas.drawLine(
+      Offset(centerX - size.width * 0.08, hipY),
+      Offset(centerX + size.width * 0.08, hipY),
+      paint,
+    );
 
-    // ─── Shoulders & Arms ─────────────────────────────────────────────────────
-    const shoulderYRelation = 0.20;
-    final shoulderY = h * shoulderYRelation;
-    // Collar bones
-    canvas.drawLine(Offset(cx - w * 0.12, shoulderY), Offset(cx, shoulderY - h * 0.01), paint);
-    canvas.drawLine(Offset(cx + w * 0.12, shoulderY), Offset(cx, shoulderY - h * 0.01), paint);
+    // Legs
+    canvas.drawLine(
+      Offset(centerX - size.width * 0.05, hipY),
+      Offset(centerX - size.width * 0.06, kneeY),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(centerX + size.width * 0.05, hipY),
+      Offset(centerX + size.width * 0.06, kneeY),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(centerX - size.width * 0.06, kneeY),
+      Offset(centerX - size.width * 0.05, footY),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(centerX + size.width * 0.06, kneeY),
+      Offset(centerX + size.width * 0.05, footY),
+      paint,
+    );
+  }
 
-    // Left arm - humerus
-    canvas.drawLine(Offset(cx - w * 0.12, shoulderY), Offset(cx - w * 0.20, h * 0.44), paint);
-    // Left forearm
-    canvas.drawLine(Offset(cx - w * 0.20, h * 0.44), Offset(cx - w * 0.18, h * 0.60), paint);
-    canvas.drawLine(Offset(cx - w * 0.20, h * 0.44), Offset(cx - w * 0.23, h * 0.60), paint);
-    // Left hand
-    canvas.drawLine(Offset(cx - w * 0.19, h * 0.60), Offset(cx - w * 0.19, h * 0.64), paint);
-    canvas.drawLine(Offset(cx - w * 0.22, h * 0.60), Offset(cx - w * 0.22, h * 0.64), paint);
-    canvas.drawLine(Offset(cx - w * 0.24, h * 0.60), Offset(cx - w * 0.25, h * 0.63), paint);
+  void _drawSkull(Canvas canvas, Size size, Paint paint, Paint fillPaint) {
+    final centerX = size.width / 2;
+    final centerY = size.height / 2;
+    final radius = size.width * 0.25;
 
-    // Right arm
-    canvas.drawLine(Offset(cx + w * 0.12, shoulderY), Offset(cx + w * 0.20, h * 0.44), paint);
-    canvas.drawLine(Offset(cx + w * 0.20, h * 0.44), Offset(cx + w * 0.18, h * 0.60), paint);
-    canvas.drawLine(Offset(cx + w * 0.20, h * 0.44), Offset(cx + w * 0.23, h * 0.60), paint);
-    canvas.drawLine(Offset(cx + w * 0.19, h * 0.60), Offset(cx + w * 0.19, h * 0.64), paint);
-    canvas.drawLine(Offset(cx + w * 0.22, h * 0.60), Offset(cx + w * 0.22, h * 0.64), paint);
-    canvas.drawLine(Offset(cx + w * 0.24, h * 0.60), Offset(cx + w * 0.25, h * 0.63), paint);
+    // Skull outline
+    canvas.drawCircle(Offset(centerX, centerY), radius, paint);
+    
+    // Eyes
+    canvas.drawCircle(Offset(centerX - radius * 0.4, centerY - radius * 0.2), radius * 0.25, fillPaint);
+    canvas.drawCircle(Offset(centerX + radius * 0.4, centerY - radius * 0.2), radius * 0.25, fillPaint);
+    
+    // Nose
+    final nosePath = Path();
+    nosePath.moveTo(centerX, centerY + radius * 0.1);
+    nosePath.lineTo(centerX - radius * 0.15, centerY + radius * 0.3);
+    nosePath.lineTo(centerX + radius * 0.15, centerY + radius * 0.3);
+    nosePath.close();
+    canvas.drawPath(nosePath, fillPaint);
+    
+    // Teeth
+    for (int i = 0; i < 8; i++) {
+      final x = centerX - radius * 0.5 + (i * radius * 0.14);
+      final y = centerY + radius * 0.6;
+      canvas.drawRect(Rect.fromLTWH(x, y, radius * 0.1, radius * 0.15), paint);
+    }
+  }
+
+  void _drawHands(Canvas canvas, Size size, Paint paint, Paint fillPaint) {
+    _drawHand(canvas, size.width * 0.25, size.height * 0.5, paint, false);
+    _drawHand(canvas, size.width * 0.75, size.height * 0.5, paint, true);
+  }
+
+  void _drawHand(Canvas canvas, double x, double y, Paint paint, bool flip) {
+    final direction = flip ? -1 : 1;
+    
+    // Palm
+    canvas.drawCircle(Offset(x, y), 30, paint);
+    
+    // Fingers
+    for (int i = 0; i < 5; i++) {
+      final angle = (i - 2) * 0.3;
+      final fingerX = x + (math.cos(angle) * 40 * direction);
+      final fingerY = y - (math.sin(angle) * 40).abs();
+      
+      // Finger bones
+      canvas.drawLine(Offset(x, y), Offset(fingerX, fingerY), paint);
+      canvas.drawLine(
+        Offset(fingerX, fingerY),
+        Offset(fingerX + (math.cos(angle) * 25 * direction), fingerY - 25),
+        paint,
+      );
+    }
+  }
+
+  void _drawRibcage(Canvas canvas, Size size, Paint paint, Paint fillPaint) {
+    final centerX = size.width / 2;
+    final topY = size.height * 0.3;
+    final bottomY = size.height * 0.6;
+
+    // Spine
+    canvas.drawLine(Offset(centerX, topY), Offset(centerX, bottomY), paint);
+
+    // Ribs
+    for (int i = 0; i < 8; i++) {
+      final y = topY + (i * (bottomY - topY) / 8);
+      final width = size.width * 0.15 - (i * 2);
+      
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(centerX, y), width: width * 2, height: 25),
+        math.pi,
+        math.pi,
+        false,
+        paint,
+      );
+    }
+
+    // Sternum
+    canvas.drawLine(
+      Offset(centerX, topY),
+      Offset(centerX, topY + (bottomY - topY) * 0.7),
+      paint..strokeWidth = 5,
+    );
   }
 
   @override
-  bool shouldRepaint(_SkeletonPainter old) => old.opacity != opacity;
+  bool shouldRepaint(_SkeletonPainter old) =>
+      old.opacity != opacity || old.color != color || old.style != style;
 }

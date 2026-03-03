@@ -1,34 +1,29 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 import 'package:image/image.dart' as img;
+import 'package:gal/gal.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class AppUtils {
-  /// Saves image bytes to the gallery/Pictures directory
+  /// Saves image bytes to the gallery using gal package
   static Future<String?> saveImageToGallery(Uint8List imageBytes,
       {String? fileName}) async {
     try {
-      final directory = await getExternalStorageDirectory();
-      if (directory == null) return null;
-
-      // Navigate to Pictures
-      final picturesDir = Directory(
-          '${directory.parent.parent.parent.parent.path}/Pictures/XrayFunCamera');
-
-      if (!await picturesDir.exists()) {
-        await picturesDir.create(recursive: true);
-      }
-
-      final name = fileName ??
-          'xray_fun_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final filePath = path.join(picturesDir.path, name);
-
-      final file = File(filePath);
-      await file.writeAsBytes(imageBytes);
-
-      return filePath;
+      final name = fileName ?? 'xray_scan_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      
+      // Save to temporary directory first
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File('${tempDir.path}/$name');
+      await tempFile.writeAsBytes(imageBytes);
+      
+      // Save to gallery using gal
+      await Gal.putImage(tempFile.path);
+      
+      // Clean up temp file
+      await tempFile.delete();
+      
+      return 'Scan saved successfully';
     } catch (e) {
       debugPrint('Error saving image: $e');
       return null;

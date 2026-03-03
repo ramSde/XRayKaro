@@ -1,39 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
 import '../core/constants.dart';
 
 class SamplesScreen extends StatelessWidget {
   const SamplesScreen({super.key});
 
-  static const List<Map<String, String>> _samples = [
-    {
-      'title': 'Hand Scan',
-      'emoji': '🖐️',
-      'description': 'See the bones in your hand with our fun filter!',
-    },
-    {
-      'title': 'Skull Scan',
-      'emoji': '💀',
-      'description': 'Turn any face into a spooky skeleton!',
-    },
-    {
-      'title': 'Full Body',
-      'emoji': '🦴',
-      'description': 'Complete skeleton effect for full body photos',
-    },
-    {
-      'title': 'Pet Scan',
-      'emoji': '🐕',
-      'description': 'Even your pets can get the X-ray treatment!',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    final samples = [
+      {
+        'title': l10n.handScan,
+        'emoji': '🖐️',
+        'description': l10n.handScanDesc,
+      },
+      {
+        'title': l10n.skullScan,
+        'emoji': '💀',
+        'description': l10n.skullScanDesc,
+      },
+      {
+        'title': l10n.fullBody,
+        'emoji': '🦴',
+        'description': l10n.fullBodyDesc,
+      },
+      {
+        'title': l10n.petScan,
+        'emoji': '🐕',
+        'description': l10n.petScanDesc,
+      },
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.bgDark,
       appBar: AppBar(
-        title: const Text('Sample Ideas'),
+        title: Text(l10n.sampleIdeas),
         backgroundColor: AppColors.cardBg,
         foregroundColor: AppColors.neonBlue,
       ),
@@ -56,7 +59,7 @@ class SamplesScreen extends StatelessWidget {
                   SizedBox(width: 12.w),
                   Expanded(
                     child: Text(
-                      'Try these fun ideas for your next X-ray scan!',
+                      l10n.sampleDescription,
                       style: TextStyle(
                         color: AppColors.neonBlue,
                         fontSize: 14.sp,
@@ -68,7 +71,7 @@ class SamplesScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.h),
-            ..._samples.map((sample) => _SampleCard(
+            ...samples.map((sample) => _SampleCard(
                   title: sample['title']!,
                   emoji: sample['emoji']!,
                   description: sample['description']!,
@@ -84,7 +87,7 @@ class SamplesScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    '💡 Pro Tips',
+                    l10n.proTips,
                     style: TextStyle(
                       color: AppColors.neonBlue,
                       fontSize: 18.sp,
@@ -92,10 +95,10 @@ class SamplesScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  _TipItem('Use good lighting for best results'),
-                  _TipItem('Try different angles and poses'),
-                  _TipItem('Share with friends for laughs!'),
-                  _TipItem('Save your favorites to gallery'),
+                  _TipItem(l10n.tipGoodLighting),
+                  _TipItem(l10n.tipDifferentAngles),
+                  _TipItem(l10n.tipShareFriends),
+                  _TipItem(l10n.tipSaveFavorites),
                 ],
               ),
             ),
@@ -103,7 +106,7 @@ class SamplesScreen extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () => Navigator.pushNamed(context, '/camera'),
               icon: const Icon(Icons.camera_alt_rounded),
-              label: const Text('Start Scanning Now'),
+              label: Text(l10n.startScanningNow),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.neonBlue,
                 foregroundColor: Colors.black,

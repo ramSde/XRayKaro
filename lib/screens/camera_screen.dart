@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
 import '../core/constants.dart';
 import '../services/permission_service.dart';
 import '../services/storage_service.dart';
@@ -109,9 +110,9 @@ class _CameraScreenState extends State<CameraScreen>
       _scanProgress = 0;
     });
 
-    // Simulate scanning animation
-    for (int i = 0; i <= 100; i += 5) {
-      await Future.delayed(const Duration(milliseconds: 40));
+    // Extended scanning animation for better engagement (5 seconds)
+    for (int i = 0; i <= 100; i += 2) {
+      await Future.delayed(const Duration(milliseconds: 100));
       if (mounted) setState(() => _scanProgress = i / 100);
     }
 
@@ -162,6 +163,7 @@ class _CameraScreenState extends State<CameraScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context)!;
 
     if (!_permissionGranted) {
       return _buildPermissionDenied(context);
@@ -226,9 +228,13 @@ class _CameraScreenState extends State<CameraScreen>
                   children: [
                     const SkeletonOverlay(animate: true, opacity: 0.9),
                     const SizedBox(height: 32),
-                    const Text(
-                      AppStrings.scanningText,
-                      style: TextStyle(
+                    Text(
+                      _scanProgress < 0.3
+                          ? l10n.calibratingSensors
+                          : _scanProgress < 0.7
+                              ? l10n.analyzingStructure
+                              : l10n.processingImage,
+                      style: const TextStyle(
                         color: AppColors.neonBlue,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -275,21 +281,8 @@ class _CameraScreenState extends State<CameraScreen>
                         onTap: () => Navigator.pop(context),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 12.w, vertical: 6.h),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(
-                            color: AppColors.neonBlue.withOpacity(0.4)),
-                      ),
-                      child: Text(
-                        '🎭 Fun Filter Active',
-                        style:
-                            TextStyle(color: AppColors.neonBlue, fontSize: 12.sp),
-                      ),
-                    ),
+                    // Removed "Fun Filter Active" badge for professional look
+                    const SizedBox(width: 40),
                     if (_cameras.length > 1)
                       Semantics(
                         label: 'Switch camera',
@@ -317,17 +310,6 @@ class _CameraScreenState extends State<CameraScreen>
                 padding: const EdgeInsets.only(bottom: 24, top: 16),
                 child: Column(
                   children: [
-                    // Disclaimer text
-                    Text(
-                      AppStrings.entertainmentDisclaimer,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
-                        fontSize: 10,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-
                     // Capture button
                     Semantics(
                       label: 'Take photo',
@@ -343,11 +325,11 @@ class _CameraScreenState extends State<CameraScreen>
                             shape: BoxShape.circle,
                             color: _isCapturing
                                 ? Colors.grey
-                                : AppColors.neonBlue.withOpacity(0.9),
+                                : AppColors.neonBlue.withValues(alpha: 0.9),
                             boxShadow: [
                               if (!_isCapturing)
                                 BoxShadow(
-                                  color: AppColors.neonBlue.withOpacity(0.5),
+                                  color: AppColors.neonBlue.withValues(alpha: 0.5),
                                   blurRadius: 20.r,
                                   spreadRadius: 5.r,
                                 ),
@@ -406,6 +388,7 @@ class _CameraScreenState extends State<CameraScreen>
   }
 
   Widget _buildPermissionDenied(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bgDark,
       body: Container(
@@ -418,9 +401,9 @@ class _CameraScreenState extends State<CameraScreen>
               children: [
                 const Text('📷', style: TextStyle(fontSize: 64)),
                 const SizedBox(height: 20),
-                const Text(
-                  'Camera Access Needed!',
-                  style: TextStyle(
+                Text(
+                  l10n.cameraPermission,
+                  style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -428,9 +411,9 @@ class _CameraScreenState extends State<CameraScreen>
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  AppStrings.cameraPermissionDenied,
-                  style: TextStyle(
+                Text(
+                  l10n.cameraPermissionDesc,
+                  style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14,
                       height: 1.6),
@@ -442,7 +425,7 @@ class _CameraScreenState extends State<CameraScreen>
                     PermissionService.openSettings();
                   },
                   icon: const Icon(Icons.settings_outlined),
-                  label: const Text('Open App Settings'),
+                  label: Text(l10n.openSettings),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.neonBlue,
                     foregroundColor: Colors.black,
@@ -455,8 +438,8 @@ class _CameraScreenState extends State<CameraScreen>
                 const SizedBox(height: 12),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Go Back',
-                      style: TextStyle(color: AppColors.textSecondary)),
+                  child: Text(l10n.goBack,
+                      style: const TextStyle(color: AppColors.textSecondary)),
                 ),
               ],
             ),

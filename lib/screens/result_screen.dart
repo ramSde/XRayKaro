@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
 import '../core/constants.dart';
 import '../core/utils.dart';
 import '../services/ad_service.dart';
@@ -49,6 +50,7 @@ class _ResultScreenState extends State<ResultScreen>
     if (_isSaving) return;
     setState(() => _isSaving = true);
     
+    final l10n = AppLocalizations.of(context)!;
     SoundService.hapticLight();
 
     try {
@@ -64,35 +66,37 @@ class _ResultScreenState extends State<ResultScreen>
         AppUtils.showSnackBar(
           context,
           savedPath != null
-              ? '✅ Image saved to gallery!'
-              : '❌ Could not save image. Check storage permission.',
+              ? l10n.imageSaved
+              : l10n.imageSaveFailed,
           isError: savedPath == null,
         );
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isSaving = false);
-        AppUtils.showSnackBar(context, '❌ Error saving image.', isError: true);
+        AppUtils.showSnackBar(context, l10n.imageSaveFailed, isError: true);
       }
     }
   }
 
   Future<void> _shareImage() async {
+    final l10n = AppLocalizations.of(context)!;
     SoundService.hapticLight();
     try {
       await Share.shareXFiles(
         [XFile(widget.imagePath)],
-        text: AppStrings.shareText,
+        text: l10n.appTitle,
       );
     } catch (e) {
       if (mounted) {
-        AppUtils.showSnackBar(context, '❌ Could not share image.', isError: true);
+        AppUtils.showSnackBar(context, l10n.shareImageFailed, isError: true);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.black,
       body: FadeTransition(
@@ -174,11 +178,11 @@ class _ResultScreenState extends State<ResultScreen>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.auto_fix_high,
+                            Icon(Icons.check_circle,
                                 color: AppColors.neonBlue, size: 14.sp),
                             SizedBox(width: 6.w),
                             Text(
-                              'Fun Skeleton Effect Applied!',
+                              l10n.scanComplete,
                               style: TextStyle(
                                   color: AppColors.neonBlue, fontSize: 11.sp),
                             ),
@@ -213,24 +217,13 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Legal disclaimer
-                      Text(
-                        AppStrings.fullDisclaimer,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
-                          fontSize: 9.sp,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 14.h),
-
                       // Action buttons
                       Row(
                         children: [
                           Expanded(
                             child: _ActionBtn(
                               icon: Icons.camera_alt_rounded,
-                              label: 'Scan Again',
+                              label: l10n.scanAgain,
                               color: AppColors.neonBlue,
                               onTap: () => Navigator.pop(context),
                             ),
@@ -239,7 +232,7 @@ class _ResultScreenState extends State<ResultScreen>
                           Expanded(
                             child: _ActionBtn(
                               icon: Icons.download_rounded,
-                              label: _isSaving ? 'Saving...' : 'Save',
+                              label: _isSaving ? l10n.saving : l10n.save,
                               color: AppColors.success,
                               onTap: _isSaving ? () {} : _saveImage,
                             ),
@@ -248,7 +241,7 @@ class _ResultScreenState extends State<ResultScreen>
                           Expanded(
                             child: _ActionBtn(
                               icon: Icons.share_rounded,
-                              label: 'Share 😂',
+                              label: l10n.share,
                               color: AppColors.neonPurple,
                               onTap: _shareImage,
                             ),

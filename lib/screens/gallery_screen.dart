@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
+import '../l10n/app_localizations.dart';
 import '../core/constants.dart';
 import '../services/ad_service.dart';
 
@@ -57,13 +58,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Future<void> _deleteImage(String path) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await File(path).delete();
       await _loadImages();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ Image deleted'),
+          SnackBar(
+            content: Text(l10n.imageDeleted),
             backgroundColor: AppColors.success,
           ),
         );
@@ -71,8 +73,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('❌ Failed to delete image'),
+          SnackBar(
+            content: Text(l10n.imageSaveFailed),
             backgroundColor: AppColors.danger,
           ),
         );
@@ -82,10 +84,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bgDark,
       appBar: AppBar(
-        title: const Text('My X-ray Gallery'),
+        title: Text(l10n.gallery),
         backgroundColor: AppColors.cardBg,
         foregroundColor: AppColors.neonBlue,
         actions: [
@@ -134,16 +137,18 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.r),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('📷', style: TextStyle(fontSize: 64.sp)),
+            Icon(Icons.medical_services_outlined,
+                color: AppColors.neonBlue, size: 64.sp),
             SizedBox(height: 16.h),
             Text(
-              'No X-ray Images Yet',
+              l10n.noImagesYet,
               style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 20.sp,
@@ -152,7 +157,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Take your first fun skeleton scan to see it here!',
+              l10n.takeFirstScan,
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 14.sp,
@@ -163,7 +168,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ElevatedButton.icon(
               onPressed: () => Navigator.pushNamed(context, '/camera'),
               icon: const Icon(Icons.camera_alt_rounded),
-              label: const Text('Start Scanning'),
+              label: Text(l10n.startScanning),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.neonBlue,
                 foregroundColor: Colors.black,
@@ -177,29 +182,30 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   void _showDeleteDialog(String path) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.cardBg,
-        title: const Text('Delete Image?',
-            style: TextStyle(color: AppColors.textPrimary)),
-        content: const Text(
-          'This action cannot be undone.',
-          style: TextStyle(color: AppColors.textSecondary),
+        title: Text(l10n.deleteImage,
+            style: const TextStyle(color: AppColors.textPrimary)),
+        content: Text(
+          l10n.deleteConfirm,
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(l10n.cancel,
+                style: const TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               _deleteImage(path);
             },
-            child: const Text('Delete',
-                style: TextStyle(color: AppColors.danger)),
+            child: Text(l10n.delete,
+                style: const TextStyle(color: AppColors.danger)),
           ),
         ],
       ),

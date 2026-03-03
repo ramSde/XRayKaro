@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
 import '../core/constants.dart';
 import '../services/storage_service.dart';
 import '../main.dart';
@@ -35,10 +36,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bgDark,
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(l10n.settings),
         backgroundColor: AppColors.cardBg,
         foregroundColor: AppColors.neonBlue,
         elevation: 0,
@@ -49,15 +51,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: EdgeInsets.all(20.r),
           children: [
             // ── Preferences ────────────────────────────────────────────────
-            const _SectionHeader('Preferences'),
+            _SectionHeader(l10n.preferences),
             const SizedBox(height: 12),
             _SettingsCard(children: [
               Semantics(
                 label: 'Toggle sound effects and haptic feedback',
                 child: _SwitchTile(
                   icon: Icons.volume_up_rounded,
-                  label: 'Sound Effects',
-                  subtitle: 'Scan sounds & haptic feedback',
+                  label: l10n.soundEffects,
+                  subtitle: l10n.soundEffectsDesc,
                   value: _soundEnabled,
                   onChanged: (v) async {
                     await StorageService.setSoundEnabled(v);
@@ -71,7 +73,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 label: 'Choose app language',
                 child: _NavTile(
                   icon: Icons.translate_rounded,
-                  label: 'Language',
+                  label: l10n.language,
+                  subtitle: l10n.chooseLanguage,
                   onTap: () async {
                     final nav = Navigator.of(context);
                     final changed = await nav.pushNamed('/language');
@@ -87,27 +90,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
 
             // ── Theme ──────────────────────────────────────────────────────
-            const _SectionHeader('Theme'),
+            _SectionHeader(l10n.theme),
             const SizedBox(height: 12),
             _SettingsCard(children: [
               Padding(
                 padding: EdgeInsets.all(16.r),
                 child: SegmentedButton<String>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: 'system',
-                      label: Text('System'),
-                      icon: Icon(Icons.brightness_auto_rounded),
+                      label: Text(l10n.themeSystem),
+                      icon: const Icon(Icons.brightness_auto_rounded),
                     ),
                     ButtonSegment(
                       value: 'dark',
-                      label: Text('Dark'),
-                      icon: Icon(Icons.dark_mode_rounded),
+                      label: Text(l10n.themeDark),
+                      icon: const Icon(Icons.dark_mode_rounded),
                     ),
                     ButtonSegment(
                       value: 'light',
-                      label: Text('Light'),
-                      icon: Icon(Icons.light_mode_rounded),
+                      label: Text(l10n.themeLight),
+                      icon: const Icon(Icons.light_mode_rounded),
                     ),
                   ],
                   selected: {_themeMode},
@@ -143,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
 
             // ── Purchases ──────────────────────────────────────────────────
-            const _SectionHeader('Purchases'),
+            _SectionHeader(l10n.purchases),
             const SizedBox(height: 12),
             _SettingsCard(children: [
               ListTile(
@@ -151,18 +154,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const EdgeInsets.symmetric(horizontal: 16),
                 leading: const Icon(Icons.restore_rounded,
                     color: AppColors.neonBlue, size: 22),
-                title: const Text('Restore Purchases',
-                    style: TextStyle(
+                title: Text(l10n.restorePurchases,
+                    style: const TextStyle(
                         color: AppColors.textPrimary, fontSize: 15)),
-                subtitle: const Text('Restore in-app purchases',
-                    style: TextStyle(
+                subtitle: Text(l10n.restorePurchasesDesc,
+                    style: const TextStyle(
                         color: AppColors.textSecondary, fontSize: 12)),
                 trailing: const Icon(Icons.arrow_forward_ios_rounded,
                     color: AppColors.textSecondary, size: 14),
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('No purchases to restore.'),
+                    SnackBar(
+                      content: Text(l10n.noPurchases),
                       backgroundColor: AppColors.cardBg,
                     ),
                   );
@@ -173,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
 
             // ── Legal ──────────────────────────────────────────────────────
-            const _SectionHeader('Legal'),
+            _SectionHeader(l10n.legal),
             const SizedBox(height: 12),
             _SettingsCard(children: [
               Semantics(
@@ -181,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 label: 'Read Privacy Policy',
                 child: _NavTile(
                   icon: Icons.lock_outline,
-                  label: 'Privacy Policy',
+                  label: l10n.privacyPolicy,
                   onTap: () => Navigator.pushNamed(context, '/privacy'),
                 ),
               ),
@@ -191,7 +194,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 label: 'Read Terms of Use',
                 child: _NavTile(
                   icon: Icons.description_outlined,
-                  label: 'Terms of Use',
+                  label: l10n.termsOfUse,
                   onTap: () => Navigator.pushNamed(context, '/terms'),
                 ),
               ),
@@ -201,7 +204,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 label: 'Read App Disclaimer',
                 child: _NavTile(
                   icon: Icons.info_outline_rounded,
-                  label: 'Disclaimer',
+                  label: l10n.disclaimer,
                   onTap: () => Navigator.pushNamed(context, '/disclaimer'),
                 ),
               ),
@@ -213,25 +216,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Center(
               child: Column(
                 children: [
-                  const Text('💀', style: TextStyle(fontSize: 28)),
+                  const Icon(Icons.medical_information_outlined,
+                      color: AppColors.neonBlue, size: 32),
                   const SizedBox(height: 6),
                   Text(
-                    'Xray Fun Camera v$_appVersion',
+                    l10n.appVersion(_appVersion),
                     style: const TextStyle(
                         color: AppColors.textSecondary, fontSize: 13),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    '⚠️ For entertainment only. Not real X-ray.',
-                    style: TextStyle(
+                  Text(
+                    l10n.entertainmentWarning,
+                    style: const TextStyle(
                         color: AppColors.danger,
                         fontSize: 11,
                         fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'support@xrayfuncamera.app',
-                    style: TextStyle(
+                  Text(
+                    l10n.supportEmail,
+                    style: const TextStyle(
                         color: AppColors.textSecondary, fontSize: 11),
                   ),
                 ],
@@ -344,10 +348,11 @@ class _SwitchTile extends StatelessWidget {
 class _NavTile extends StatelessWidget {
   final IconData icon;
   final String label;
+  final String? subtitle;
   final VoidCallback onTap;
 
   const _NavTile(
-      {required this.icon, required this.label, required this.onTap});
+      {required this.icon, required this.label, this.subtitle, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -357,6 +362,9 @@ class _NavTile extends StatelessWidget {
       title: Text(label,
           style: const TextStyle(
               color: AppColors.textPrimary, fontSize: 15)),
+      subtitle: subtitle != null ? Text(subtitle!,
+          style: const TextStyle(
+              color: AppColors.textSecondary, fontSize: 12)) : null,
       trailing: const Icon(Icons.arrow_forward_ios_rounded,
           color: AppColors.textSecondary, size: 14),
       onTap: onTap,

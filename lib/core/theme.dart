@@ -107,6 +107,30 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.indigo,
         brightness: Brightness.light,
+        primary: const Color(0xFF0066CC),
+        secondary: const Color(0xFF6B4EFF),
+      ),
+      scaffoldBackgroundColor: Colors.grey.shade50,
+      fontFamily: 'Roboto',
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        titleTextStyle: TextStyle(
+          color: Colors.black87,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w700,
+        ),
+        iconTheme: const IconThemeData(color: Color(0xFF0066CC)),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0066CC),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+        ),
       ),
     );
   }
